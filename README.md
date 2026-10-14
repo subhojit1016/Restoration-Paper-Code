@@ -1,49 +1,86 @@
 # Restoration-Paper-Code
 
-Research code and input instances associated with an accepted paper on network restoration routing. This repository combines the original Python source archive with the **updated** network-instance and realization files from `Codes for Github(1).zip`. Older input files are retained separately for traceability.
+Python implementations and input datasets for numerical experiments on network restoration routing, prepared as supporting research materials for an accepted paper.
 
-> **Publication note:** Add the final paper title, authors, journal/DOI, and citation once confirmed. The scripts have been **reorganized but not refactored or validated**; the results have not been reproduced as part of this packaging.
+**Publication information:** Paper title, author list, publication venue, and DOI will be added when finalized. Until then, please cite the associated paper rather than treating this repository as a separate publication.
 
-## Repository layout
+## Contents
 
-| Directory | Contents |
+The current repository contains **14 Python scripts**, **60 network-instance text files**, and **16 realization CSV files**.
+
+```text
+Restoration-Paper-Code/
+├── src/
+│   ├── algorithms/           # Restoration algorithms and heuristic comparisons
+│   ├── instance_generation/  # Network-instance generation
+│   ├── analysis/             # Result aggregation and table preparation
+│   └── utilities/            # Supporting data and plotting utilities
+├── data/
+│   ├── networks/             # Network input instances (.txt)
+│   └── realizations/         # Stochastic realization inputs (.csv)
+├── docs/
+│   ├── FILE_INVENTORY.csv    # Inventory from repository preparation
+│   └── INPUT_AUDIT.md       # Preliminary input-reference audit
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+## Python programs
+
+| Location | Purpose |
 |---|---|
-| `src/algorithms/` | Restoration algorithm implementations, including SA, SM, PP and nearest-neighbor variants |
-| `src/instance_generation/` | Instance and cyclic-network generation utilities |
-| `src/analysis/` | Comparison and table-processing scripts |
-| `src/utilities/` | Auxiliary checking and plotting scripts |
-| `data/networks/` | Supplied network `.txt` instances |
-| `data/realizations/` | Current realization `.csv` files (if supplied) |
-| `data/previous_upload/` | Older or replaced inputs, preserved for reference only |
-| `docs/` | File inventory and input-dependency audit |
+| `src/algorithms/` | Restoration procedures, state-aggregation variants, and priority/nearest-neighbor heuristics |
+| `src/instance_generation/` | Generate network instances used in experiments |
+| `src/analysis/` | Combine and summarize experiment outputs for tables |
+| `src/utilities/` | Auxiliary file processing, network checks, and illustrations |
 
-## Installation
+The script filenames retain their original experiment labels. In particular, a number appearing in a script filename is **not** a guarantee that a matching input instance is included in this archive.
 
-Requires Python 3 and the packages listed in `requirements.txt` (exact versions of the original environment are unknown).
+## Input data
+
+- **Network instances:** `data/networks/` contains text files for supplied 20-, 30-, 40-, and 50-node network configurations, including files identified as cyclic, synthetic, or method-specific variants.
+- **Stochastic realizations:** `data/realizations/` contains CSV files labeled by network size and parameter values `0.25`, `0.50`, `0.75`, and `0.90` for the 20-, 30-, 40-, and 50-node cases.
+- The meaning of individual fields and parameters should be checked against the corresponding Python script and the accepted paper; filenames alone do not establish their statistical interpretation.
+
+## Requirements
+
+Use Python 3 and install the dependencies listed in `requirements.txt`:
 
 ```bash
 python -m venv .venv
-# Activate the environment, then:
-pip install -r requirements.txt
+# Activate the virtual environment for your operating system.
+python -m pip install -r requirements.txt
 ```
 
-## Running the original scripts
+Dependency versions are not pinned because the original software environment has not been confirmed.
 
-The scripts are preserved with their original names and content. Several refer to data files using relative paths, and some refer to files absent from the supplied archives. **Moving them into folders alone does not guarantee that they will run.**
+## Running the experiments
 
-For a script that uses relative input filenames, create a temporary working directory, copy the required network and realization inputs into it, and run the script from that directory (using the script's full path). Inspect the selected script for hard-coded paths, output destinations, and parameters before running it. Do not assume all scripts are runnable with the provided inputs.
+The programs are individual research scripts rather than a unified command-line application. Before running a script:
 
-See `docs/INPUT_AUDIT.md` for a preliminary filename-based audit and `docs/FILE_INVENTORY.csv` for the complete inventory.
+1. Open the script and identify its expected input filenames, parameters, and output locations.
+2. Locate the corresponding files in `data/networks/` and `data/realizations/`.
+3. Check any relative paths or absolute paths in the script. Some scripts may expect inputs in their current working directory; moving files into the organized folders does not automatically update those paths.
+4. Run the selected script from a working directory where its expected inputs can be found. For example:
 
-## Reproducibility and limitations
+```bash
+python "src/algorithms/PP and NN.py"
+```
 
-- Python scripts are unchanged. Updated inputs are under `data/networks/` and `data/realizations/`; superseded and omitted earlier inputs are retained under `data/previous_upload/`.
-- Do not mix archived files into current experiments without checking the intended version.
-- Some referenced inputs and prior result files are missing.
-- Code has not been executed or verified against the accepted paper's tables or figures.
-- Dependencies are unpinned pending confirmation of the original software environment.
-- Please check the publication's code/data policy and add licensing/citation metadata only after confirming the details.
+**This command illustrates the invocation syntax only.** It has not been verified to run successfully from the repository root with the current input paths. Refer to `docs/INPUT_AUDIT.md` for known or suspected input gaps.
 
-## Citation
+## Reproducibility status
 
-Please cite the accompanying accepted paper. Add its bibliographic details here when available.
+The files are provided to document the research implementation and available experimental inputs. During repository preparation, comments were added to the Python scripts without intentionally changing their executable statements. However:
+
+- The scripts have **not** been executed or systematically checked against the accepted paper's numerical tables and figures.
+- Some hard-coded or relative input/output paths may require adjustment for a new environment.
+- Some script-specific input instances or previously generated result files may not be present.
+- No claim of one-command, end-to-end reproducibility is made at this stage.
+
+For the exact inventory, consult `docs/FILE_INVENTORY.csv`. The input audit is preliminary and should not be treated as a completed runtime dependency check.
+
+## Citation and licensing
+
+If you use this code or the accompanying datasets, please cite the associated research paper. Full bibliographic details and a formal license should be added after confirmation by the authors and any applicable publisher requirements. **No license is implied by public availability on GitHub.**
