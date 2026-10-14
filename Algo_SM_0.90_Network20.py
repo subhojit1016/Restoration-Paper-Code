@@ -16,15 +16,19 @@ from scipy.spatial.distance import cityblock
 import pickle
 import ast
 
+##############  Input parameters  ###############
+
 start = timeit.default_timer()
 
-prob_value = float(sys.argv[1])
-service = float(sys.argv[2])
+prob_value = 0.25
+service = 0.0
 
-epsilon =float(sys.argv[4])
+epsilon =0.0001
 
-iteration = int(sys.argv[5])
+iteration = 10000
+filename = "Network9_Example.txt"
 
+############## Input parameters   ###############
 
 def add_vertex(v):
     global distance_matrix
@@ -93,7 +97,7 @@ ycord = []
 weight =[]
   
 
-filename = (sys.argv[3])
+
 f = open(filename,'r')
 
 with f as file:
@@ -395,7 +399,7 @@ def state_calculation_policy(nodes_with_power, nodes_without_power, A1, random_n
     return post_decision_state    
     
 
-nx.draw_circular(G, with_labels = True, node_size = 500)
+#nx.draw_circular(G, with_labels = True, node_size = 500)
 
 def compareList(l1,l2):
    l1.sort()
@@ -648,8 +652,37 @@ num_of_itr = i
 df = pd.DataFrame([t.__dict__ for t in new_dict ])
 s = str(service)
 p = str(prob_value)
-#df.to_csv(s + "_States_"+ filename +"_" + p +".csv")
 
+def parse_state(x):
+    """
+    Accepts either:
+      - string: "((0,), (0,), (1,), (0,), (3,))"
+      - tuple:  ((0,), (0,), (1,), (0,), (3,))
+    Returns: [0, 0, 1, 0, 3]
+    """
+    if pd.isna(x):
+        return None
+    if isinstance(x, str):
+        x = ast.literal_eval(x)   # convert string -> tuple
+    # now x should be a tuple of 1-tuples
+    return [t[0] for t in x]
+
+
+df["state_list"] = df["s"].apply(parse_state)
+
+df["next_state"] = df["s"].shift(-1)
+df["next_state_list"] = df["next_state"].apply(parse_state)
+
+# action = first element of next state
+df["action"] = df["next_state_list"].apply(lambda L: L[0] if L is not None else None)
+
+df_trans = (
+    df.loc[df["next_state"].notna(), ["s", "action", "next_state", "val"]]
+      .rename(columns={"s": "state", "val": "V_state"})
+      .reset_index(drop=True)
+)
+
+df_trans.to_csv(s + "_States_"+ filename +"_" + p +".csv")
 end = timeit.default_timer()
 total_time = (end - start)
 
@@ -722,7 +755,7 @@ xcord = []
 ycord = []
 weight =[]
   
-filename = (sys.argv[3])
+
 f = open(filename,'r')
 
 with f as file:
@@ -768,7 +801,7 @@ for h in range(len(update_potentialnodes)):
                 #add_edge(update_potentialnodes[h], update_potentialnodes[r], distance.euclidean((xcord[h],ycord[h]),(xcord[r],ycord[r])))
 
 
-nx.draw_circular(G, with_labels = True, node_size = 500)
+#nx.draw_circular(G, with_labels = True, node_size = 500)
 
 def compareList(l1,l2):
    l1.sort()
@@ -906,7 +939,7 @@ rows, cols = (1, 8)
 data_result = [[0 for i in range(cols)] for j in range(rows)]
 
 
-list_realization = pd.read_csv('Realization_0.90_Network20.csv')
+list_realization = pd.read_csv('Realization_0.25_Network9.csv')
 realization = list(list_realization['realization'])       
     
 for r1 in range(len(realization)):    
@@ -978,7 +1011,7 @@ for r1 in range(len(realization)):
         if (len(a)==0):
             arr_cost = []
             for act in range(len(nodes_wop)):
-                if (nodes_wop[counter] in nodes_notfaulty):
+                if (nodes_wop[act] in nodes_notfaulty):
                     cost_val = (distance_matrix[action][nodes_wop[act]])*(len(potential_nodes) - len(nodes_wp))
                 else:
                     cost_val = (distance_matrix[action][nodes_wop[act]] + service)*(len(potential_nodes) - len(nodes_wp))
@@ -1207,7 +1240,7 @@ for r1 in range(len(realization)):
     ycord = []
     weight =[]
       
-    filename = (sys.argv[3])
+    
     f = open(filename,'r')
 
     with f as file:
@@ -1225,7 +1258,7 @@ for r1 in range(len(realization)):
     for i,j in zip (nodes,predecessor):
         G2.add_edges_from([(j, i)])
     
-    nx.draw(G2, with_labels = True, node_size = 500)
+    #nx.draw(G2, with_labels = True, node_size = 500)
     
     potential_nodes_p=list(G2.nodes())
     
