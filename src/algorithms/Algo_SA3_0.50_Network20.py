@@ -1371,6 +1371,6 @@ average_dat['t2(sec)'] = total_time1
 
 s = str(service)
 p = str(prob_value)
-dat.to_csv(s + "_Table_" + filename + "_" + p +".csv", index=False)
+#dat.to_excel(s + "_Table_" + filename + "_" + p +".xlsx")
 average_dat.to_csv(s + "Computational_Table_" + filename + "_" + p +".csv", index=False)
 print("\n" + str(num_of_itr))
